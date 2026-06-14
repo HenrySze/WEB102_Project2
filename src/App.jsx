@@ -1,122 +1,83 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import heroImg from './assets/hero.png'
-import './App.css'
+// src/App.jsx
+import { useState } from 'react';
+import Flashcard from './components/Flashcard'; // Import your new component
+import './App.css';
+import armo from './assets/armo.jpg';
+import axo from './assets/axo.jpg'
+import capy from './assets/capy.jpg'
+import hedge from './assets/hedge.jpg'
+import koala from './assets/koala.jpg'
+import komodo from './assets/komodo.jpg'
+import oran from './assets/oran.webp'
+import redp from './assets/redp.jpeg'
+import sbs from './assets/sbs.jpeg'
+import tree from './assets/tree.webp'
 
-function App() {
-  const [count, setCount] = useState(0)
+const ANIMAL_DATA = [
+  { id: 1, image:armo, answer:"Armadillo" },
+  { id: 2, image:axo, answer:"Axolotl" },
+  { id: 3, image:capy, answer:"Capybara" },
+  { id: 4, image:hedge, answer:"Hedgehog" },
+  { id: 5, image:koala, answer:"Koala" },
+  { id: 6, image:komodo, answer:"Komodo Dragon" },
+  { id: 7, image:oran, answer:"Orangutan" },
+  { id: 8, image:redp, answer:"Red Panda" },
+  { id: 9, image:sbs, answer:"Shoebill Stork" },
+  { id: 10, image:tree, answer:"Tree Frog" }
+];
+
+// Fisher–Yates shuffle: returns a new randomly-ordered copy
+const shuffle = (array) => {
+  const result = [...array];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+};
+
+const App = () => {
+  // Shuffle once when the component first mounts (lazy initializer)
+  const [deck, setDeck] = useState(() => shuffle(ANIMAL_DATA));
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const currentCard = deck[currentIndex];
+
+  const handleShuffle = () => {
+    setDeck(shuffle(ANIMAL_DATA));
+    setCurrentIndex(0);
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % deck.length);
+  };
+
+  const handlePrev = () => {
+    setCurrentIndex((prevIndex) => (prevIndex - 1 + deck.length) % deck.length);
+  };
 
   return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
+    <div className="jungle-bg">
+      <div className="content">
+        <h1>Name The Animal</h1>
+        <h3>Meet the planet's wildest residents. Test your memory, learn new species, and master the animal kingdom one card at a time</h3>
+
+        <Flashcard
+          image={currentCard.image}
+          answer={currentCard.answer}
+          currentIndex={currentIndex}
+        />
+
         <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
+          <button onClick={handlePrev} className="nav-btn">← Prev</button>
+          <span className="card-counter">{currentIndex + 1} / {deck.length}</span>
+          <button onClick={handleNext} className="nav-btn">Next →</button>
         </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
 
-      <div className="ticks"></div>
+        <button onClick={handleShuffle} className="nav-btn">Shuffle</button>
 
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
+      </div>
+    </div>
+  );
+};
 
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
-}
-
-export default App
+export default App;
